@@ -6,6 +6,16 @@
 package tecladovirtualapp;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 /**
  *
  * @author Usuario
@@ -57,6 +67,18 @@ public class TecladoVirtualApp {
         add(bottomPanel, BorderLayout.SOUTH);
 
         
+    }
+    private List<String> leerPangramaDesdeArchivo(String ruta) {
+        List<String> listaFrases = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                listaFrases.add(linea);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return listaFrases;
     }
     public static void main(String[] args) {
         // TODO code application logic here
