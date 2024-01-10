@@ -16,21 +16,21 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-/**
- *
- * @author Usuario
- */
-public class TecladoVirtualApp {
 
-    /**
-     * @param args the command line arguments
-     */
+public class TecladoVirtualApp extends JFrame {
+    private JTextArea textArea;
+    private JLabel fraseLabel;
+    private List<String> frases;
+    private int pulsacionesCorrectas;
+    private int pulsacionesIncorrectas;
+    private Set<Character> letrasDificiles;
+
     public TecladoVirtualApp() {
         super("Teclado Virtual App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1500, 250);
 
-        frases = leerPangramaDesdeArchivo("C:/.txt");
+        frases = leerPangramaDesdeArchivo("C:/Users/Usuario/Documents/NetBeansProjects/TecladoVirtualApp/src/tecladovirtualapp/ejemplospangramas.txt");
         Collections.shuffle(frases);
 
         fraseLabel = new JLabel(frases.get(0));
@@ -40,7 +40,7 @@ public class TecladoVirtualApp {
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
 
-        JPanel tecladoPanel = new JPanel(new GridLayout(5, 11)); // Ajusté el GridLayout
+        JPanel tecladoPanel = new JPanel(new GridLayout(5, 11)); 
         String[] teclas = {
                 "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
                 "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
@@ -54,20 +54,21 @@ public class TecladoVirtualApp {
             boton.addActionListener(new TeclaActionListener());
             tecladoPanel.add(boton);
 
-            // Agregar ActionListener específico para el botón "ENTER"
+           
             if (tecla.equals("ENTER")) {
                 boton.addActionListener(new ComprobarActionListener());
             }
         }
 
-        // Crear un panel que contiene tanto el teclado como el panel ELIMINAR
+        
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(tecladoPanel, BorderLayout.CENTER);
 
         add(bottomPanel, BorderLayout.SOUTH);
 
-        
+        reiniciar();
     }
+
     private List<String> leerPangramaDesdeArchivo(String ruta) {
         List<String> listaFrases = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
@@ -80,6 +81,7 @@ public class TecladoVirtualApp {
         }
         return listaFrases;
     }
+
     private void reiniciar() {
         pulsacionesCorrectas = 0;
         pulsacionesIncorrectas = 0;
@@ -100,12 +102,13 @@ public class TecladoVirtualApp {
             } else if (tecla.equals("⇐")) {
                 eliminarUltimaLetra();
             } else if (tecla.equals("ENTER")) {
-                // Acción especial para "ENTER" si es necesaria
+                
             } else {
                 textArea.append(tecla);
             }
         }
     }
+
     private class ComprobarActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -127,7 +130,7 @@ public class TecladoVirtualApp {
             }
         }
 
-        // Agrega las letras del JLabel que no están en el JTextArea como difíciles
+       
         for (char letra : letrasFrase) {
             if (fraseActual.indexOf(letra) == -1 && !letrasDificiles.contains(letra)) {
                 letrasDificiles.add(letra);
@@ -137,7 +140,7 @@ public class TecladoVirtualApp {
         pulsacionesCorrectas += coincidencias;
         pulsacionesIncorrectas += Math.abs(letrasUsuario.length - coincidencias);
 
-        // Mostrar informe
+        
         JOptionPane.showMessageDialog(null,
                 "Pulsaciones correctas: " + pulsacionesCorrectas +
                         "\nPulsaciones incorrectas: " + pulsacionesIncorrectas +
@@ -146,10 +149,19 @@ public class TecladoVirtualApp {
                 JOptionPane.INFORMATION_MESSAGE);
 
         
+        reiniciar();
     }
 }
-    public static void main(String[] args) {
-        // TODO code application logic here
+
+
+    private void eliminarUltimaLetra() {
+        String texto = textArea.getText();
+        if (!texto.isEmpty()) {
+            textArea.setText(texto.substring(0, texto.length() - 1));
+        }
     }
-    
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new TecladoVirtualApp().setVisible(true));
+    }
 }
