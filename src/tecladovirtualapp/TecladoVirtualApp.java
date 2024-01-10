@@ -20,6 +20,11 @@ public class TecladoVirtualApp {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1500, 250);
 
+        frases = leerPangramaDesdeArchivo("C:/Users/johan/OneDrive/Escritorio/pangramas.txt");
+        Collections.shuffle(frases);
+
+        fraseLabel = new JLabel(frases.get(0));
+        add(fraseLabel, BorderLayout.NORTH);
 
         textArea = new JTextArea();
         JScrollPane scrollPane = new JScrollPane(textArea);
@@ -33,6 +38,25 @@ public class TecladoVirtualApp {
                 "Z", "X", "C", "V", "B", "N", "M", ":", ";", "⇐",
                 "@", "?", "<", ",", "Espacio", "/", ".", ">", "_", "ENTER"
         };
+
+        for (String tecla : teclas) {
+            JButton boton = new JButton(tecla);
+            boton.addActionListener(new TeclaActionListener());
+            tecladoPanel.add(boton);
+
+            // Agregar ActionListener específico para el botón "ENTER"
+            if (tecla.equals("ENTER")) {
+                boton.addActionListener(new ComprobarActionListener());
+            }
+        }
+
+        // Crear un panel que contiene tanto el teclado como el panel ELIMINAR
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(tecladoPanel, BorderLayout.CENTER);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        
     }
     public static void main(String[] args) {
         // TODO code application logic here
