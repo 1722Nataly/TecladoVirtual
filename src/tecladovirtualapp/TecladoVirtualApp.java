@@ -30,7 +30,7 @@ public class TecladoVirtualApp {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1500, 250);
 
-        frases = leerPangramaDesdeArchivo("C:/Users/johan/OneDrive/Escritorio/pangramas.txt");
+        frases = leerPangramaDesdeArchivo("C:/.txt");
         Collections.shuffle(frases);
 
         fraseLabel = new JLabel(frases.get(0));
@@ -79,6 +79,32 @@ public class TecladoVirtualApp {
             e.printStackTrace();
         }
         return listaFrases;
+    }
+    private void reiniciar() {
+        pulsacionesCorrectas = 0;
+        pulsacionesIncorrectas = 0;
+        letrasDificiles = new HashSet<>();
+        Collections.shuffle(frases);
+        fraseLabel.setText(frases.get(0));
+        textArea.setText("");
+    }
+
+    private class TeclaActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton boton = (JButton) e.getSource();
+            String tecla = boton.getText();
+
+            if (tecla.equals("Espacio")) {
+                textArea.append(" ");
+            } else if (tecla.equals("⇐")) {
+                eliminarUltimaLetra();
+            } else if (tecla.equals("ENTER")) {
+                // Acción especial para "ENTER" si es necesaria
+            } else {
+                textArea.append(tecla);
+            }
+        }
     }
     private class ComprobarActionListener implements ActionListener {
     @Override
